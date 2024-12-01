@@ -1,0 +1,22 @@
+﻿[
+  {
+    "typeId": 1,
+    "message": "Please select your language."
+  },
+  {
+    "typeId": 2,
+    "message": "Home page🏠"
+  },
+  {
+    "typeId": 3,
+    "message": "Welcome!🎉\nThe keyboard is down👇"
+  },
+  {
+    "typeId": 4,
+    "message": "Upload with 1"
+  },
+  {
+    "typeId": 5,
+    "message": "Upload with 2"
+  }
+]

@@ -1,0 +1,14 @@
+﻿[
+  {
+    "id": 1,
+    "name": "select-language"
+  },
+  {
+    "id": 2,
+    "name": "first-page"
+  },
+  {
+    "id": 3,
+    "name": "wellcome-message"
+  }
+]
