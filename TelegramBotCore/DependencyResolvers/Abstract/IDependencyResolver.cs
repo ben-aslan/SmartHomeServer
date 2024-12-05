@@ -11,7 +11,7 @@ public interface IDependencyResolver
     public IContainer VideoMessageContainer { get; }
     public IContainer KeyboardButtonMessageContainer { get; }
     public IContainer CallbackQueryContainer { get; }
-    ContainerBuilder GetBasicRegisters();
+    ContainerBuilder GetBasicRegisters(ContainerBuilder builder = null!);
     IContainer GetCommandContainer();
     IContainer GetProcessContainer();
     IContainer GetVoiceMessageContainer();

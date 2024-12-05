@@ -16,6 +16,9 @@ using Core.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Core.Utilities.Security.Jwt;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using SmartHomeServer.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +32,13 @@ builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
 builder.Services.AddSingleton<IDependencyResolver, AutofacDR>();
 
 builder.Services.AddScoped<IHandle, UpdateHandle>();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Host.ConfigureContainer<ContainerBuilder>(b =>
+{
+    b.RegisterModule(new AutofacDR(builder.Environment, builder.Configuration));
+});
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -83,17 +93,19 @@ builder.Services.AddDependencyResolvers(new ICoreModule[] { new CoreModule() });
 builder.Services.AddHostedMqttServer(ob =>
 {
     ob.WithDefaultEndpoint();
-    //ob.WithDefaultEndpointPort(5210);
+    ob.WithDefaultEndpointPort(1883);
     ob.WithConnectionBacklog(100);
 }).AddMqttConnectionHandler().AddConnections();
 
-builder.WebHost.UseKestrel(
-        o =>
-        {
-            o.ListenAnyIP(1883, l => l.UseMqtt());
-            o.ListenAnyIP(5026, l => l.UseHttps());
-        }
-        );
+if (builder.Environment.IsDevelopment())
+{
+    builder.WebHost.UseKestrel(o =>
+    {
+        o.ListenAnyIP(1883, l => l.UseMqtt());
+        o.ListenAnyIP(5025);
+        o.ListenAnyIP(5026, l => l.UseHttps());
+    });
+}
 
 var app = builder.Build();
 
@@ -110,7 +122,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapConnectionHandler<MqttConnectionHandler>("/mqtt",
+app.MapConnectionHandler<MQTTController>("/mqtt",
         httpConnectionDispatcherOptions => httpConnectionDispatcherOptions.WebSockets.SubProtocolSelector = protocolList => protocolList.FirstOrDefault() ?? string.Empty);
 
 app.MapMqtt("/mqtt");

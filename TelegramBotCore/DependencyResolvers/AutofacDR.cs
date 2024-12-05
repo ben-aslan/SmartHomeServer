@@ -22,10 +22,11 @@ using TelegramBotCore.KeyboardButtons.Abstract;
 using TelegramBotCore.Processes.Abstract;
 using TelegramBotCore.VideoMessages.Abstract;
 using TelegramBotCore.VoiceMessage.Abstract;
+using Module = Autofac.Module;
 
 namespace TelegramBotAPI.DependencyResolvers;
 
-public class AutofacDR : IDependencyResolver
+public class AutofacDR : Module, IDependencyResolver
 {
     IWebHostEnvironment _environment;
     IConfiguration _configuration;
@@ -43,6 +44,11 @@ public class AutofacDR : IDependencyResolver
         KeyboardButtonMessageContainer = GetKeyboardButtonMessageContainer();
         CallbackQueryContainer = GetCallbackQueryContainer();
         VideoMessageContainer = GetVideoMessageContainer();
+    }
+
+    protected override void Load(ContainerBuilder builder)
+    {
+        builder = GetBasicRegisters(builder);
     }
 
     public IContainer BaseContainer { get; }
@@ -143,10 +149,10 @@ public class AutofacDR : IDependencyResolver
         return builder.Build();
     }
 
-    public ContainerBuilder GetBasicRegisters()
+    public ContainerBuilder GetBasicRegisters(ContainerBuilder builder = null!)
     {
-        ContainerBuilder builder = new ContainerBuilder();
-
+        if (builder == null)
+            builder = new ContainerBuilder();
         builder.RegisterInstance(_environment).As<IWebHostEnvironment>().SingleInstance();
         builder.RegisterInstance(_configuration).As<IConfiguration>();
 
