@@ -11,7 +11,7 @@ public class InfoCommand : Command, ICommand
 {
     public void Execute(Update update, ITelegramBotClient _client = null!, IMessageService _message = null!)
     {
-        if (!claims.Any(x => x == EOperationClaim.User))
+        if (!_claims.Any(x => x == EOperationClaim.User))
             return;
 
     }

@@ -6,5 +6,5 @@ namespace TelegramBotCore.Commands.Abstract;
 public abstract class Command
 {
     ITelegramBotClient _BotClient = null!;
-    internal List<EOperationClaim> claims = null!;
+    internal List<EOperationClaim> _claims = null!;
 }
