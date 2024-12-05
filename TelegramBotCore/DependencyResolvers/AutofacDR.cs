@@ -48,7 +48,37 @@ public class AutofacDR : Module, IDependencyResolver
 
     protected override void Load(ContainerBuilder builder)
     {
+        Assembly asm = TelegramBotCoreAssembly.GetAssembly;
+
         builder = GetBasicRegisters(builder);
+
+        builder.RegisterAssemblyTypes(asm)
+           .Where(x => x.GetInterface("ICallbackQuery") == typeof(ICallbackQuery) && x.IsClass)
+           .As<ICallbackQuery>()
+           .SingleInstance()
+           .Keyed<ICallbackQuery>(x => x.GetCustomAttribute<CallbackQueriesAttribute>(false)?.FunctionCode ?? "nokey_" + Random.Shared.Next(1, 10000000));
+
+        builder.RegisterAssemblyTypes(asm)
+            .Where(x => x.GetInterface("ICommand") == typeof(ICommand) && x.IsClass)
+            .As<ICommand>()
+            .SingleInstance()
+            .Keyed<ICommand>(x => (x.GetCustomAttribute<CommandAttribute>(false)?.Name ?? ("nokey_" + Random.Shared.Next(1, 10000000))) + "/*" + (int)(x.GetCustomAttribute<CommandAttribute>(false)?.ChatType ?? ChatType.Private));
+
+        builder.RegisterAssemblyTypes(asm)
+            .Where(x => x.GetInterface("IKeyboardButtonMessage") == typeof(IKeyboardButtonMessage) && x.IsClass)
+            .As<IKeyboardButtonMessage>()
+            .SingleInstance()
+            .Keyed<IKeyboardButtonMessage>(x => x.GetCustomAttribute<KeyboardButtonMessageAttribute>(false)?.Text ?? "nokey_" + Random.Shared.Next(1, 10000000));
+
+        builder.RegisterAssemblyTypes(asm)
+            .Where(x => x.GetInterface("IProcess") == typeof(IProcess) && x.IsClass)
+            .As<IProcess>()
+            .SingleInstance()
+            .Keyed<IProcess>(x =>
+            x.GetCustomAttribute<ProcessAttribute>(false)?.Key ?? "nokey_" + Random.Shared.Next(1, 10000000)
+            //(x.GetCustomAttribute<ProcessAttribute>(false).StepId.ToString() + "_"
+            //+ x.GetCustomAttribute<ProcessAttribute>(false).StepIndexId.ToString()).ToString()
+            );
     }
 
     public IContainer BaseContainer { get; }

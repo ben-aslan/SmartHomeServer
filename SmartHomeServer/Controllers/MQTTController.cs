@@ -14,7 +14,7 @@ public class MQTTController : ConnectionHandler, IMqttServerAdapter
 {
     MqttServer _mqttServer;
 
-    public MQTTController(MqttServer mqttServer,IUserService userService)
+    public MQTTController(MqttServer mqttServer)
     {
         _mqttServer = mqttServer;
         _serverOptions = null!;
