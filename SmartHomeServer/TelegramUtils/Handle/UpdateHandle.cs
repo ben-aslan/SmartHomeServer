@@ -2,8 +2,6 @@
 using Telegram.Bot.Types;
 using TelegramBotCore.CallbackQueries.Abstract;
 using TelegramBotCore.Commands.Abstract;
-using TelegramBotAPI.DependencyResolvers.Abstract;
-using TelegramBotAPI.Handle.Abstract;
 using TelegramBotCore.KeyboardButtons.Abstract;
 using TelegramBotCore.Processes.Abstract;
 using TelegramBotCore.VoiceMessage.Abstract;
@@ -13,8 +11,10 @@ using Telegram.Bot;
 using TelegramBotCore.LangService.Concrete;
 using TelegramBotCore.VideoMessages.Abstract;
 using Microsoft.AspNetCore.Hosting;
+using SmartHomeServer.TelegramUtils.DependencyResolvers.Abstract;
+using SmartHomeServer.TelegramUtils.Handle.Abstract;
 
-namespace TelegramBotAPI.Handle;
+namespace SmartHomeServer.TelegramUtils.Handle;
 
 public class UpdateHandle : IHandle
 {

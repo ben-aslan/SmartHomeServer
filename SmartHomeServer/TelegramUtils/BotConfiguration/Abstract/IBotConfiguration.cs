@@ -1,7 +1,7 @@
 ﻿using Entities.Dtos;
 using IResult = Core.Utilities.Results.IResult;
 
-namespace TelegramBotAPI.BotConfiguration.Abstract;
+namespace SmartHomeServer.TelegramUtils.BotConfiguration.Abstract;
 
 public interface IBotConfiguration
 {

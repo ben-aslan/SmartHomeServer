@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace TelegramBotAPI.DependencyResolvers.Abstract;
+namespace SmartHomeServer.TelegramUtils.DependencyResolvers.Abstract;
 
 public interface IDependencyResolver
 {
@@ -11,6 +11,7 @@ public interface IDependencyResolver
     public IContainer VideoMessageContainer { get; }
     public IContainer KeyboardButtonMessageContainer { get; }
     public IContainer CallbackQueryContainer { get; }
+    public IContainer MQTTContainer { get; }
     ContainerBuilder GetBasicRegisters(ContainerBuilder builder = null!);
     IContainer GetCommandContainer();
     IContainer GetProcessContainer();
@@ -19,4 +20,5 @@ public interface IDependencyResolver
     IContainer GetKeyboardButtonMessageContainer();
     IContainer GetCallbackQueryContainer();
     IContainer GetControllerContainer();
+    IContainer GetMQTTContainer();
 }

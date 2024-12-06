@@ -9,12 +9,13 @@ using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Entities.Enums;
+using SmartHomeServer.MQTT;
+using SmartHomeServer.MQTT.Abstract;
+using SmartHomeServer.TelegramUtils.BotConfiguration.Abstract;
+using SmartHomeServer.TelegramUtils.DependencyResolvers.Abstract;
 using System.Reflection;
 using Telegram.Bot.Types.Enums;
-using TelegramBotAPI.BotConfiguration.Abstract;
-using TelegramBotAPI.DependencyResolvers.Abstract;
 using TelegramBotCore;
 using TelegramBotCore.CallbackQueries.Abstract;
 using TelegramBotCore.Commands.Abstract;
@@ -24,7 +25,7 @@ using TelegramBotCore.VideoMessages.Abstract;
 using TelegramBotCore.VoiceMessage.Abstract;
 using Module = Autofac.Module;
 
-namespace TelegramBotAPI.DependencyResolvers;
+namespace SmartHomeServer.TelegramUtils.DependencyResolvers;
 
 public class AutofacDR : Module, IDependencyResolver
 {
@@ -44,6 +45,7 @@ public class AutofacDR : Module, IDependencyResolver
         KeyboardButtonMessageContainer = GetKeyboardButtonMessageContainer();
         CallbackQueryContainer = GetCallbackQueryContainer();
         VideoMessageContainer = GetVideoMessageContainer();
+        MQTTContainer = GetMQTTContainer();
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -62,7 +64,7 @@ public class AutofacDR : Module, IDependencyResolver
             .Where(x => x.GetInterface("ICommand") == typeof(ICommand) && x.IsClass)
             .As<ICommand>()
             .SingleInstance()
-            .Keyed<ICommand>(x => (x.GetCustomAttribute<CommandAttribute>(false)?.Name ?? ("nokey_" + Random.Shared.Next(1, 10000000))) + "/*" + (int)(x.GetCustomAttribute<CommandAttribute>(false)?.ChatType ?? ChatType.Private));
+            .Keyed<ICommand>(x => (x.GetCustomAttribute<CommandAttribute>(false)?.Name ?? "nokey_" + Random.Shared.Next(1, 10000000)) + "/*" + (int)(x.GetCustomAttribute<CommandAttribute>(false)?.ChatType ?? ChatType.Private));
 
         builder.RegisterAssemblyTypes(asm)
             .Where(x => x.GetInterface("IKeyboardButtonMessage") == typeof(IKeyboardButtonMessage) && x.IsClass)
@@ -95,6 +97,7 @@ public class AutofacDR : Module, IDependencyResolver
 
     public IContainer VideoMessageContainer { get; }
 
+    public IContainer MQTTContainer { get; }
 
     public IContainer GetCallbackQueryContainer()
     {
@@ -121,7 +124,7 @@ public class AutofacDR : Module, IDependencyResolver
             .Where(x => x.GetInterface("ICommand") == typeof(ICommand) && x.IsClass)
             .As<ICommand>()
             .SingleInstance()
-            .Keyed<ICommand>(x => (x.GetCustomAttribute<CommandAttribute>(false)?.Name ?? ("nokey_" + Random.Shared.Next(1, 10000000))) + "/*" + (int)(x.GetCustomAttribute<CommandAttribute>(false)?.ChatType ?? ChatType.Private));
+            .Keyed<ICommand>(x => (x.GetCustomAttribute<CommandAttribute>(false)?.Name ?? "nokey_" + Random.Shared.Next(1, 10000000)) + "/*" + (int)(x.GetCustomAttribute<CommandAttribute>(false)?.ChatType ?? ChatType.Private));
 
         return builder.Build();
     }
@@ -254,11 +257,12 @@ public class AutofacDR : Module, IDependencyResolver
         var telegramBotCoreAssembly = TelegramBotCoreAssembly.GetAssembly;
         var businessAssembly = BusinessAssembly.GetAssembly;
 
-        builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
-            .EnableInterfaceInterceptors(new ProxyGenerationOptions()
-            {
-                Selector = new AspectInterceptorSelector()
-            }).SingleInstance();
+        //////////////Stackoverflow error core///////////////
+        //builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+        //    .EnableInterfaceInterceptors(new ProxyGenerationOptions()
+        //    {
+        //        Selector = new AspectInterceptorSelector()
+        //    }).SingleInstance();
 
         builder.RegisterAssemblyTypes(telegramBotCoreAssembly).AsImplementedInterfaces()
             .EnableInterfaceInterceptors(new ProxyGenerationOptions()
@@ -298,6 +302,25 @@ public class AutofacDR : Module, IDependencyResolver
             .Where(x => x.GetInterface("IVoiceMessage") == typeof(IVoiceMessage) && x.IsClass)
             .As<IVoiceMessage>()
             .Keyed<IVoiceMessage>(x => x.GetCustomAttribute<VoiceMessageAttribute>(false)?.Key ?? "nokey_" + Random.Shared.Next(1, 10000000));
+
+        return builder.Build();
+    }
+
+    public IContainer GetMQTTContainer()
+    {
+        Assembly asm = MQTTAssembly.GetAssembly;
+
+        ContainerBuilder builder = GetBasicRegisters();
+
+        builder.RegisterAssemblyTypes(asm)
+            .Where(x => x.GetInterface("ITopic") == typeof(ITopic) && x.IsClass)
+            .As<ITopic>()
+            .SingleInstance()
+            .Keyed<ITopic>(x =>
+            x.GetCustomAttribute<TopicAttribute>(false)?.Topic ?? ""
+            //(x.GetCustomAttribute<ProcessAttribute>(false).StepId.ToString() + "_"
+            //+ x.GetCustomAttribute<ProcessAttribute>(false).StepIndexId.ToString()).ToString()
+            );
 
         return builder.Build();
     }

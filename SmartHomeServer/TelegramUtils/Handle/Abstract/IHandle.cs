@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace TelegramBotAPI.Handle.Abstract;
+namespace SmartHomeServer.TelegramUtils.Handle.Abstract;
 
 public interface IHandle
 {

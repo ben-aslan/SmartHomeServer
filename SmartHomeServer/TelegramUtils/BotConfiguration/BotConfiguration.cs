@@ -3,13 +3,13 @@ using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Core.Utilities.Results;
 using Entities.Dtos;
+using SmartHomeServer.TelegramUtils.BotConfiguration.Abstract;
+using SmartHomeServer.TelegramUtils.DependencyResolvers.Abstract;
+using SmartHomeServer.TelegramUtils.Handle.Abstract;
 using Telegram.Bot;
-using TelegramBotAPI.BotConfiguration.Abstract;
-using TelegramBotAPI.DependencyResolvers.Abstract;
-using TelegramBotAPI.Handle.Abstract;
 using IResult = Core.Utilities.Results.IResult;
 
-namespace TelegramBotAPI.BotConfiguration;
+namespace SmartHomeServer.TelegramUtils.BotConfiguration;
 
 public class BotConfiguration : IBotConfiguration
 {
