@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MQTTnet;
 using MQTTnet.Server;
+using SmartHomeServer.TelegramUtils.Handle.Abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using TelegramBotAPI.Handle.Abstract;
 
 namespace SmartHomeServer.Controllers;
 

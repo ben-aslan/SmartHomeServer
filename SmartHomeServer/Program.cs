@@ -1,12 +1,6 @@
 using MQTTnet;
 using MQTTnet.AspNetCore;
 using MQTTnet.Server;
-using TelegramBotAPI.BotConfiguration.Abstract;
-using TelegramBotAPI.BotConfiguration;
-using TelegramBotAPI.DependencyResolvers.Abstract;
-using TelegramBotAPI.DependencyResolvers;
-using TelegramBotAPI.Handle.Abstract;
-using TelegramBotAPI.Handle;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Core.DependencyResolvers;
@@ -19,6 +13,12 @@ using Core.Utilities.Security.Jwt;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using SmartHomeServer.Controllers;
+using SmartHomeServer.TelegramUtils.BotConfiguration;
+using SmartHomeServer.TelegramUtils.BotConfiguration.Abstract;
+using SmartHomeServer.TelegramUtils.DependencyResolvers.Abstract;
+using SmartHomeServer.TelegramUtils.DependencyResolvers;
+using SmartHomeServer.TelegramUtils.Handle.Abstract;
+using SmartHomeServer.TelegramUtils.Handle;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -130,7 +130,6 @@ app.MapMqtt("/mqtt");
 app.UseMqttServer(
     server =>
     {
-
         server.ClientConnectedAsync += arg =>
         {
             return Task.CompletedTask;
