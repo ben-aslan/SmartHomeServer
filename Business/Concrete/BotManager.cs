@@ -29,6 +29,6 @@ public class BotManager : IBotService
 
     public bool IsUploadManager(long botId)
     {
-        return _botDal.Any(x => x.BotChatId == botId && x.Active && x.UploadManager && x.Status);
+        return _botDal.Any(x => x.BotChatId == botId && x.Active && x.Selected && x.Status);
     }
 }

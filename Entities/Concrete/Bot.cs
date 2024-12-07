@@ -22,7 +22,7 @@ public class Bot : IEntity
     [MaxLength(2000)]
     public string? WebhookUrl { get; set; }
 
-    public bool UploadManager { get; set; } = false;
+    public bool Selected { get; set; } = false;
     public bool Active { get; set; } = true;
     public bool Status { get; set; } = true;
 }
