@@ -24,6 +24,7 @@ public class EfContext : DbContext
     public DbSet<Language> Languages { get; set; }
     public DbSet<Photo> Photos { get; set; }
     public DbSet<Group> Groups { get; set; }
+    public DbSet<MQTTCredential> MQTTCredentials { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

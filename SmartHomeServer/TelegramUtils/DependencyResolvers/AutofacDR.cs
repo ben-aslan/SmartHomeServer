@@ -206,6 +206,9 @@ public class AutofacDR : Module, IDependencyResolver
         builder.RegisterType<EfGroupDal>().As<IGroupDal>().SingleInstance();
         builder.RegisterType<GroupManager>().As<IGroupService>().SingleInstance();
 
+        builder.RegisterType<EfMQTTCredentialDal>().As<IMQTTCredentialDal>().SingleInstance();
+        builder.RegisterType<MQTTCredentialManager>().As<IMQTTCredentialService>().SingleInstance();
+
         builder.RegisterType<EfLanguageDal>().As<ILanguageDal>().SingleInstance();
 
         //builder.RegisterType<InlineKeyboardManager>().As<IInlineKeyboardService>().SingleInstance();
