@@ -1,0 +1,15 @@
+services:
+  javabakwebapi:
+    image: ghcr.io/ben-aslan/smarthomeserver:main
+    restart: always
+    environment:
+      SMARTHOME_MQTT_PORT: 1883
+      SMARTHOME_HTTP_PORT: 5025
+      SMARTHOME_HTTPS_PORT: 5026
+      SMARTHOME_DB_SERVER: "localhost"
+      SMARTHOME_DB_NAME: "dbname"
+      SMARTHOME_DB_USER: "user"
+      SMARTHOME_DB_PASS: "pass"
+    network_mode: host
+    volumes:
+      - /opt/SmartHomeServer/Logs:/SmartHomeServer/Logs
