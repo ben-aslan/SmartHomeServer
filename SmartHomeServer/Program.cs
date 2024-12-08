@@ -112,7 +112,6 @@ else
     {
         o.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("SMARTHOME_MQTT_PORT") ?? "1883"), l => l.UseMqtt());
         o.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("SMARTHOME_HTTP_PORT") ?? "5025"));
-        o.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("SMARTHOME_HTTPS_PORT") ?? "5026"), l => l.UseHttps());
     });
 }
 
