@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Business.Abstract;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -7,6 +8,7 @@ using MQTTnet.Adapter;
 using MQTTnet.AspNetCore;
 using MQTTnet.Diagnostics;
 using MQTTnet.Formatter;
+using MQTTnet.Protocol;
 using MQTTnet.Server;
 using SmartHomeServer.MQTT;
 using SmartHomeServer.MQTT.Abstract;
@@ -20,44 +22,28 @@ public class MQTTController : ConnectionHandler, IMqttServerAdapter
 {
     MqttServer _mqttServer;
     IDependencyResolver _dependencyResolver;
+    IMQTTCredentialService _mqttCredentialService;
 
-    public MQTTController(MqttServer mqttServer, IDependencyResolver dependencyResolver)
+    public MQTTController(MqttServer mqttServer, IDependencyResolver dependencyResolver, IMQTTCredentialService mqttCredentialService)
     {
         _mqttServer = mqttServer;
         _dependencyResolver = dependencyResolver;
+        _mqttCredentialService = mqttCredentialService;
         _mqttServer.InterceptingPublishAsync += InterceptingPublishAsync;
-        _mqttServer.InterceptingSubscriptionAsync += InterceptingSubscriptionAsync;
-        _mqttServer.ClientAcknowledgedPublishPacketAsync += _mqttServer_ClientAcknowledgedPublishPacketAsync;
-        _mqttServer.InterceptingClientEnqueueAsync += InterceptingClientEnqueueAsync;
+        _mqttServer.ValidatingConnectionAsync += ValidatingConnectionAsync;
         _serverOptions = null!;
         ClientHandler = null!;
     }
 
-    private async Task InterceptingClientEnqueueAsync(InterceptingClientApplicationMessageEnqueueEventArgs arg)
+    private Task ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
     {
-        if (arg.SenderClientId != "SenderClientId")
-            await _mqttServer.InjectApplicationMessage(new(new MqttApplicationMessageBuilder().WithTopic(arg.ApplicationMessage.Topic).WithPayload("InterceptingClientEnqueueAsync").Build())
-            {
-                SenderClientId = "SenderClientId"
-            });
-    }
-
-    private async Task _mqttServer_ClientAcknowledgedPublishPacketAsync(ClientAcknowledgedPublishPacketEventArgs arg)
-    {
-        if (arg.ClientId != "SenderClientId")
-            await _mqttServer.InjectApplicationMessage(new(new MqttApplicationMessageBuilder().WithTopic(arg.PublishPacket.Topic).WithPayload("ClientAcknowledgedPublishPacket").Build())
-            {
-                SenderClientId = "SenderClientId"
-            });
-    }
-
-    private async Task InterceptingSubscriptionAsync(InterceptingSubscriptionEventArgs arg)
-    {
-        if (arg.ClientId != "SenderClientId")
-            await _mqttServer.InjectApplicationMessage(new(new MqttApplicationMessageBuilder().WithTopic(arg.TopicFilter.Topic).WithPayload("InterceptingSubscription").Build())
-            {
-                SenderClientId = "SenderClientId"
-            });
+        if (!_mqttCredentialService.Validate(arg.UserName, arg.Password))
+        {
+            arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+            return Task.CompletedTask;
+        }
+        arg.ReasonCode = MqttConnectReasonCode.Success;
+        return Task.CompletedTask;
     }
 
     private Task InterceptingPublishAsync(InterceptingPublishEventArgs arg)
@@ -72,7 +58,7 @@ public class MQTTController : ConnectionHandler, IMqttServerAdapter
                 {
                     string key = arg.ApplicationMessage.Topic ?? "";
                     var topic = scope.ResolveKeyed<ITopic>(key);
-                    topic.Execute(new MQTTMessage { Topic = arg.ApplicationMessage.Topic, Payload = arg.ApplicationMessage.Payload });
+                    topic.Execute(new MQTTMessage { Topic = arg.ApplicationMessage.Topic!, Payload = arg.ApplicationMessage.PayloadSegment });
                 }
                 catch (Exception e)
                 {
