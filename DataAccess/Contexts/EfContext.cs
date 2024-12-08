@@ -25,6 +25,7 @@ public class EfContext : DbContext
     public DbSet<Photo> Photos { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<MQTTCredential> MQTTCredentials { get; set; }
+    public DbSet<MQTTCredentialOperationClaim> MQTTCredentialOperationClaims { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

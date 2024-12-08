@@ -21,4 +21,6 @@ public class MQTTCredential : IEntity
     public byte[] PasswordHash { get; set; } = null!;
 
     public bool Status { get; set; } = true;
+
+    public List<MQTTCredentialOperationClaim> MQTTCredentialOperationClaims { get; set; } = null!;
 }
