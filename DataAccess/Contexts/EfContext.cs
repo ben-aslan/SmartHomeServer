@@ -8,7 +8,7 @@ public class EfContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseMySql(ConnectionStrings.ConnectionString, new MySqlServerVersion(new Version(8, 0, 39))/*, (e) => { e.EnableRetryOnFailure(5, TimeSpan.FromSeconds(100), null); }*/);
+        optionsBuilder.UseMySql($@"server={Environment.GetEnvironmentVariable("SMARTHOME_DB_SERVER")};user={Environment.GetEnvironmentVariable("SMARTHOME_DB_USER")};password={Environment.GetEnvironmentVariable("SMARTHOME_DB_PASS")};database={Environment.GetEnvironmentVariable("SMARTHOME_DB_NAME")}", new MySqlServerVersion(new Version(8, 0, 39)), (e) => { e.EnableRetryOnFailure(5, TimeSpan.FromSeconds(100), null); });
         base.OnConfiguring(optionsBuilder);
     }
 
