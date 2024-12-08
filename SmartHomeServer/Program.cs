@@ -127,28 +127,6 @@ app.MapConnectionHandler<MQTTController>("/mqtt",
 
 app.MapMqtt("/mqtt");
 
-app.UseMqttServer(
-    server =>
-    {
-        server.ClientConnectedAsync += arg =>
-        {
-            return Task.CompletedTask;
-        };
-        server.InterceptingSubscriptionAsync += async (arg) =>
-        {
-            await server.InjectApplicationMessage(new InjectedMqttApplicationMessage(new MqttApplicationMessageBuilder().WithTopic(arg.TopicFilter.Topic).WithPayload("Test").Build())
-            {
-                SenderClientId = "SenderClientId"
-            });
-        };
-        server.ClientSubscribedTopicAsync += async (arg) =>
-        {
-            await server.InjectApplicationMessage(new InjectedMqttApplicationMessage(new MqttApplicationMessageBuilder().WithTopic(arg.TopicFilter.Topic).WithPayload("Test").Build())
-            {
-                SenderClientId = "SenderClientId"
-            });
-        };
-    }
-    );
+app.UseMqttServer(server => { });
 
 app.Run();
