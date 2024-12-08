@@ -101,9 +101,9 @@ if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.UseKestrel(o =>
     {
-        o.ListenAnyIP(1883, l => l.UseMqtt());
-        o.ListenAnyIP(5025);
-        o.ListenAnyIP(5026, l => l.UseHttps());
+        o.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("SMARTHOME_MQTT_PORT") ?? "1883"), l => l.UseMqtt());
+        o.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("SMARTHOME_HTTP_PORT") ?? "5025"));
+        o.ListenAnyIP(Convert.ToInt32(Environment.GetEnvironmentVariable("SMARTHOME_HTTPS_PORT") ?? "5026"), l => l.UseHttps());
     });
 }
 
