@@ -29,7 +29,7 @@ cd /opt/SmartHomeServer
 ```
 
 ```bash
-curl -O -L "https://raw.githubusercontent.com/ben-aslan/SmartHomeServer/Main/docker-compose.yml";
+curl -O -L "https://raw.githubusercontent.com/ben-aslan/SmartHomeServer/main/docker-compose.yml";
 ```
 
 ```bash
