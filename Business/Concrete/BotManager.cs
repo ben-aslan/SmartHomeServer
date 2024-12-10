@@ -15,6 +15,11 @@ public class BotManager : IBotService
         _botDal = botDal;
     }
 
+    public Bot GetSelectedBot()
+    {
+        return _botDal.First(x => x.Selected && x.Active && x.Status);
+    }
+
     [SecuredOperation("admin")]
     public List<Bot> GetActiveBots()
     {
