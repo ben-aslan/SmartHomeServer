@@ -15,4 +15,5 @@ public interface IUserService
     IDataResult<EOperationClaim> GetUserClaim(long chatId);
     IDataResult<EOperationClaim> GetUserClaimById(int userId);
     bool HaveClaim(long chatId, EOperationClaim claim);
+    List<User> GetAdmins();
 }

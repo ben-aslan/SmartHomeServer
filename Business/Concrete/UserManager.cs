@@ -104,4 +104,9 @@ public class UserManager : IUserService
         _userDal.Update(user);
         return new SuccessResult();
     }
+
+    public List<User> GetAdmins()
+    {
+        return _userDal.GetList(x => x.UserOperationClaims.Any(x => x.OperationClaimId == (int)EOperationClaim.Admin) && !x.IsBot && x.Status).ToList();
+    }
 }
