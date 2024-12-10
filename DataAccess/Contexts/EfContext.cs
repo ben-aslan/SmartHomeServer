@@ -26,6 +26,8 @@ public class EfContext : DbContext
     public DbSet<Group> Groups { get; set; }
     public DbSet<MQTTCredential> MQTTCredentials { get; set; }
     public DbSet<MQTTCredentialOperationClaim> MQTTCredentialOperationClaims { get; set; }
+    public DbSet<Stat> Stats { get; set; }
+    public DbSet<Log> Logs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
