@@ -23,21 +23,21 @@ public class StartCommand : Command, ICommand
     public void Execute(Update update, ITelegramBotClient _client = null!, IMessageService _message = null!)
     {
         var message = update.Message!;
-        //var result = _userService.Add(new User
-        //{
-        //    FirstName = message.Chat.FirstName!,
-        //    LastName = message.Chat.LastName,
-        //    UserName = message.Chat.Username,
-        //    ChatId = message.Chat.Id,
-        //    IsBot = message.From?.IsBot ?? false,
-        //    IsPremium = message.From?.IsPremium ?? false,
-        //    UserTag = message.Chat.FirstName,
-        //    AddedToAttachmentMenu = message.From?.AddedToAttachmentMenu ?? false,
-        //    CanJoinGroups = message.From?.CanJoinGroups ?? false,
-        //    CanReadAllGroupMessages = message.From?.CanReadAllGroupMessages ?? false,
-        //    SupportsInlineQueries = message.From?.SupportsInlineQueries ?? false,
-        //    LanguageId = (int)ELang.FA
-        //});
+        var result = _userService.Add(new User
+        {
+            FirstName = message.Chat.FirstName!,
+            LastName = message.Chat.LastName,
+            UserName = message.Chat.Username,
+            ChatId = message.Chat.Id,
+            IsBot = message.From?.IsBot ?? false,
+            IsPremium = message.From?.IsPremium ?? false,
+            UserTag = message.Chat.FirstName,
+            AddedToAttachmentMenu = message.From?.AddedToAttachmentMenu ?? false,
+            CanJoinGroups = message.From?.CanJoinGroups ?? false,
+            CanReadAllGroupMessages = message.From?.CanReadAllGroupMessages ?? false,
+            SupportsInlineQueries = message.From?.SupportsInlineQueries ?? false,
+            LanguageId = (int)ELang.EN
+        });
 
         var userOperationalClaim = _userService.GetUserClaim(message.From!.Id).Data;
 

@@ -27,7 +27,7 @@ public class Commode1Topic : ITopic
             return;
         _userService.GetAdmins().ForEach(e =>
         {
-            _client.SendMessage(e.ChatId, "commode 1 " + (Encoding.Default.GetString(message.Payload) == "1" ? "opended" : "closed"));
+            _client.SendMessage(e.ChatId, "commode 1 " + (Encoding.Default.GetString(message.Payload) == "0" ? "opended" : "closed"));
         });
 
         _statService.ChangeStatAsync(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload));
