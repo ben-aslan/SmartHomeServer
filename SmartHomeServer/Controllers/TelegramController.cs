@@ -23,12 +23,12 @@ public class TelegramController : ControllerBase
     [HttpGet("sw")]
     public async Task<IActionResult> SetWebhookAsync(string botToken, string url)
     {
-        await new TelegramBotClient(botToken).SetWebhook(url + "/api/update?botId=" + botToken.Split(':')[0]);
+        await new TelegramBotClient(botToken).SetWebhook(url + "/api/t?botId=" + botToken.Split(':')[0],dropPendingUpdates:false);
         return Ok();
     }
 
     [HttpPost]
-    public IActionResult Post(Update update, [FromQuery] long botId)
+    public IActionResult Post([FromBody] Update update, [FromQuery] long botId)
     {
         if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
         {
