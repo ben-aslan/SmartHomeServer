@@ -58,7 +58,7 @@ public class MQTTController : ConnectionHandler, IMqttServerAdapter
                 {
                     string key = arg.ApplicationMessage.Topic ?? "";
                     var topic = scope.ResolveKeyed<ITopic>(key);
-                    topic.Execute(new MQTTMessage { Topic = arg.ApplicationMessage.Topic!, Payload = arg.ApplicationMessage.PayloadSegment });
+                    topic.Execute(new MQTTMessage { Topic = arg.ApplicationMessage.Topic!, Payload = arg.ApplicationMessage.PayloadSegment, Sender = arg.ClientId });
                 }
                 catch (Exception e)
                 {
