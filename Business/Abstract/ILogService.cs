@@ -4,5 +4,5 @@ namespace Business.Abstract;
 
 public interface ILogService
 {
-    Task AddAsync(Log log);
+    Task AddAsync(string name, string value, string device);
 }

@@ -14,8 +14,8 @@ public class LogManager : ILogService
         _logDal = logDal;
     }
 
-    public async Task AddAsync(Log log)
+    public async Task AddAsync(string name, string value, string device)
     {
-        await _logDal.AddAsync(log);
+        await _logDal.AddAsync(new Log { Name = name, Value = value, Device = device });
     }
 }
