@@ -24,7 +24,7 @@ public class AlarmTopic : ITopic
 
     public void Execute(MQTTMessage message)
     {
-        if (_statService.Any(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload)))
+        if (_statService.Any(((int)EClient.PublicClient).ToString(), message.Topic, Encoding.Default.GetString(message.Payload)))
             return;
         _userService.GetAdmins().ForEach(e =>
         {
