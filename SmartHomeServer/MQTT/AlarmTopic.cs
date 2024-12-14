@@ -27,7 +27,7 @@ public class AlarmTopic : ITopic
             return;
         _userService.GetAdmins().ForEach(e =>
         {
-            _client.SendMessage(e.ChatId, "Alarm: " + (Encoding.Default.GetString(message.Payload) == "0" ? "activated" : "deactivated"));
+            _client.SendMessage(e.ChatId, "Alarm: " + (Encoding.Default.GetString(message.Payload) == "1" ? "activated" : "deactivated"));
         });
 
         _statService.ChangeStatAsync(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload));
