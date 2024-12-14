@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Enums;
 using SmartHomeServer.MQTT.Abstract;
 using System.Text;
 using Telegram.Bot;
@@ -23,7 +24,7 @@ public class PlanATopic : ITopic
 
     public void Execute(MQTTMessage message)
     {
-        if (_statService.FirstOrDefalut(message.Sender, "alarm")?.Value == "1")
+        if (_statService.FirstOrDefalut(((int)EClient.PublicClient).ToString(), "alarm")?.Value == "1")
             _userService.GetAdmins().ForEach(e =>
             {
                 _client.SendMessage(e.ChatId, "alarm: Plan A");
