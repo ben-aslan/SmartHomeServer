@@ -24,14 +24,14 @@ public class AlarmTopic : ITopic
 
     public void Execute(MQTTMessage message)
     {
-        if (_statService.Any(((int)EClient.PublicClient).ToString(), message.Topic, Encoding.Default.GetString(message.Payload)))
+        if (_statService.Any(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload)))
             return;
         _userService.GetAdmins().ForEach(e =>
         {
             _client.SendMessage(e.ChatId, "Alarm: " + (Encoding.Default.GetString(message.Payload) == "1" ? "activated" : "deactivated"));
         });
 
-        _statService.ChangeStatAsync(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload));
+        _statService.ChangeStatAsync(((int)EClient.PublicClient).ToString(), message.Topic, Encoding.Default.GetString(message.Payload));
 
         _logService.AddAsync(message.Topic, Encoding.Default.GetString(message.Payload), message.Sender);
     }
