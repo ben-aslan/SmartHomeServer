@@ -25,10 +25,11 @@ public class Commode2Topic : ITopic
     {
         if (_statService.Any(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload)))
             return;
-        _userService.GetAdmins().ForEach(e =>
-        {
-            _client.SendMessage(e.ChatId, "commode 2 " + (Encoding.Default.GetString(message.Payload) == "0" ? "opended" : "closed"));
-        });
+        if (_statService.FirstOrDefalut(message.Sender, "alarm")?.Value == "1")
+            _userService.GetAdmins().ForEach(e =>
+            {
+                _client.SendMessage(e.ChatId, "commode 2 " + (Encoding.Default.GetString(message.Payload) == "0" ? "opended" : "closed"));
+            });
 
         _statService.ChangeStatAsync(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload));
 

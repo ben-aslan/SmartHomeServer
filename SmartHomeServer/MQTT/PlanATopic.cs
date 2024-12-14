@@ -23,10 +23,11 @@ public class PlanATopic : ITopic
 
     public void Execute(MQTTMessage message)
     {
-        _userService.GetAdmins().ForEach(e =>
-        {
-            _client.SendMessage(e.ChatId, "alarm: Plan A");
-        });
+        if (_statService.FirstOrDefalut(message.Sender, "alarm")?.Value == "1")
+            _userService.GetAdmins().ForEach(e =>
+            {
+                _client.SendMessage(e.ChatId, "alarm: Plan A");
+            });
 
         _logService.AddAsync(message.Topic, Encoding.Default.GetString(message.Payload), message.Sender);
     }
