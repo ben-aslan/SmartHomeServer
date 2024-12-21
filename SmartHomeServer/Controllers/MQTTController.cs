@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Business.Abstract;
+using Entities.Enums;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -23,16 +24,27 @@ public class MQTTController : ConnectionHandler, IMqttServerAdapter
     MqttServer _mqttServer;
     IDependencyResolver _dependencyResolver;
     IMQTTCredentialService _mqttCredentialService;
+    IStatService _statService;
 
-    public MQTTController(MqttServer mqttServer, IDependencyResolver dependencyResolver, IMQTTCredentialService mqttCredentialService)
+    public MQTTController(MqttServer mqttServer, IDependencyResolver dependencyResolver, IMQTTCredentialService mqttCredentialService, IStatService statService)
     {
         _mqttServer = mqttServer;
         _dependencyResolver = dependencyResolver;
         _mqttCredentialService = mqttCredentialService;
         _mqttServer.InterceptingPublishAsync += InterceptingPublishAsync;
         _mqttServer.ValidatingConnectionAsync += ValidatingConnectionAsync;
+        _mqttServer.ClientSubscribedTopicAsync += ClientSubscribedTopicAsync;
         _serverOptions = null!;
         ClientHandler = null!;
+        _statService = statService;
+    }
+
+    private Task ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
+    {
+        var stat = _statService.FirstOrDefalut(((int)EClient.PublicClient).ToString(), arg.TopicFilter.Topic);
+        if (stat != null)
+            _mqttServer.InjectApplicationMessage(arg.TopicFilter.Topic, stat.Value);
+        return Task.CompletedTask;
     }
 
     private Task ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)

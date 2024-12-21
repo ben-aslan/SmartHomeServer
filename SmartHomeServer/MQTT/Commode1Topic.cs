@@ -32,7 +32,7 @@ public class Commode1Topic : ITopic
                 _client.SendMessage(e.ChatId, "commode 1 " + (Encoding.Default.GetString(message.Payload) == "0" ? "opended" : "closed"));
             });
 
-        _statService.ChangeStatAsync(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload));
+        _statService.ChangeStatAsync(((int)EClient.PublicClient).ToString(), message.Topic, Encoding.Default.GetString(message.Payload));
 
         _logService.AddAsync(message.Topic, Encoding.Default.GetString(message.Payload), message.Sender);
     }
