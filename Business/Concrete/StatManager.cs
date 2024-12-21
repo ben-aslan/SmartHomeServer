@@ -18,6 +18,11 @@ public class StatManager : IStatService
         return _statDal.Any(x => x.StatusName == statName && x.ValueName == valueName && x.Value == value && x.Status);
     }
 
+    public bool AnyNoValue(string statName, string valueName)
+    {
+        return _statDal.Any(x => x.StatusName == statName && x.ValueName == valueName && x.Status);
+    }
+
     public async Task ChangeStatAsync(string statName, string valueName, string value)
     {
         if (_statDal.Any(x => x.StatusName == statName && x.ValueName == valueName && x.Status))
