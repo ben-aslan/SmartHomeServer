@@ -24,7 +24,7 @@ public class Commode2Topic : ITopic
 
     public void Execute(MQTTMessage message)
     {
-        if (_statService.Any(message.Sender, message.Topic, Encoding.Default.GetString(message.Payload)))
+        if (_statService.Any(((int)EClient.PublicClient).ToString(), message.Topic, Encoding.Default.GetString(message.Payload)))
             return;
         if (_statService.FirstOrDefalut(((int)EClient.PublicClient).ToString(), "alarm")?.Value == "1")
             _userService.GetAdmins().ForEach(e =>
