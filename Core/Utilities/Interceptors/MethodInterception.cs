@@ -26,10 +26,10 @@ public abstract class MethodInterception : MethodInterceptionBaseAttribute
         {
             isSuccess = false;
             OnException(invocation, e);
-            if (invocation.Method.ReturnType == typeof(IResult))
-            {
-                invocation.ReturnValue = new ErrorResult(message: $"message: {e.Message}\n\nInnerException: {e.InnerException}");
-            }
+            //if (invocation.Method.ReturnType == typeof(IResult))
+            //{
+            //    invocation.ReturnValue = new ErrorResult(message: $"message: {e.Message}\n\nInnerException: {e.InnerException}");
+            //}
             //else if (invocation.Method.ReturnType.GetInterfaces().Contains(typeof(IResult)))
             //{
             //    Type type = invocation.Method.ReturnType;
@@ -45,10 +45,10 @@ public abstract class MethodInterception : MethodInterceptionBaseAttribute
             //    //new ErrorDataResult<Type>(message: $"message: {e.Message}\n\nInnerException: {e.InnerException}");
             //    //(message: $"message: {e.Message}\n\nInnerException: {e.InnerException}")
             //}
-            else
-            {
+            //else
+            //{
                 throw;
-            }
+            //}
         }
         finally
         {
